@@ -1,0 +1,36 @@
+<%@page import="org.apache.tomcat.jdbc.pool.interceptor.AbstractCreateStatementInterceptor"%>
+<%@page import="com.mysql.cj.xdevapi.CreateIndexParams"%>
+<%@page import="project.ConnectionProvider" %>
+<%@page import="java.sql.*" %>
+
+
+
+<%
+	String email=session.getAttribute("email").toString();
+	
+	String subject=request.getParameter("subject");
+	
+	String body=request.getParameter("body");
+	
+	
+	try{
+		Connection con=ConnectionProvider.getCon();
+		PreparedStatement ps=con.prepareStatement("insert into message (email,subject,body) values(?,?,?)");
+		ps.setString(1,email);		
+		ps.setString(2,subject);
+		ps.setString(3,body);
+		ps.executeUpdate();
+		response.sendRedirect("messageUs.jsp?msg=done");
+		
+		
+	}catch(Exception e){
+		response.sendRedirect("messageUs.jsp?msg=invalid");
+
+		System.out.println(e);
+	}
+	
+	
+	
+	
+
+%>
